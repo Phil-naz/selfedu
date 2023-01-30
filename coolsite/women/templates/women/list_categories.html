@@ -1,0 +1,15 @@
+<!--{% for c in cats %}-->
+<!--	{% if c.pk == cat_selected %}-->
+<!--		<li class="selected"><a href="{{ c.get_absolute_url }}">{{c.name}}</a></li>-->
+<!--	{% else %}-->
+<!--		<li class="left-chapters"><a  class="left-chapters" href="{{ c.get_absolute_url }}">{{c.name}}</a></li>   &lt;!&ndash; import 'get_absolute_url' from models.py &ndash;&gt;-->
+<!--	{% endif %}-->
+<!--{% endfor %}-->
+
+{% for c in cats %}
+	{% if c.pk == cat_selected %}
+		<li class="selected_link">{{c.name}}</a></li>
+	{% else %}
+		<li><a href="{{ c.get_absolute_url }}">{{c.name}}</a></li>   <!-- import 'get_absolute_url' from models.py -->
+	{% endif %}
+{% endfor %}

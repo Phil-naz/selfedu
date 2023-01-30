@@ -1,0 +1,141 @@
+{% load static %}   <!-- for loading CSS, JS & images -->
+{% load women_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+
+
+	<title>{{title}}</title>
+	<link type="text/css" href="{% static 'women/css/styles.css' %}" rel="stylesheet" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="{% static 'women/images/main.ico' %}" type="image/x-icon"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	{% block mainmenu %}
+		<div class="header">
+			<ul id="mainmenu" class="mainmenu">
+			<li class="logo"><a href="{% url 'home' %}"><div class="logo"></div></a></li> <!-- LOGO -->
+                                                                      <!-- Top menu bar -->
+
+<!-- {% menucat as menu_cat %}    Top menu 'menu_cat' in 'templatetags/women_tags.py' -->
+{% for m in menu %}		 <!-- Here was code: '{% menucat as menu_cat %} ' -->
+			<li><a href="{% url m.url_name %}">{{m.title}}</a></li>
+{% endfor %}
+			{% if request.user.is_authenticated %}
+			<li class="last"> {{user.first_name}} | <a href="{% url 'logout' %}">Выйти</a></li>
+			{% else %}
+			<li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a> </li>
+			{% endif %}
+			</ul>
+			<div class="clear"></div>
+		</div>
+{% endblock mainmenu %}
+
+</head>
+<body>
+
+<table class="table-page" border=0 cellpadding="0" cellspacing="0">
+<tr><td valign=top>
+
+
+
+<table class="table-content" border=0 cellpadding="0" cellspacing="0">
+<tr>
+<!-- Left sidebar  -->
+	<td valign="top" class="left-chapters">
+
+
+	<ul id="leftchapters">
+		<li><br></li>
+{% if cat_selected == 0 %}   <!-- If 'cat_selected' changed, it is text (no link) -->
+		<li class="selected">Все категории</li> <!--  class="selected_link" -->
+{% else %}
+		<li><a href="{% url 'home' %}">Все категории</a></li>
+{% endif %}
+<!--    С этим кодом "Все категории" не выделяется, ссылка работает -->
+<!--		{% getcats as categories %}-->
+<!--	<ul id="leftchapters">-->
+<!--		<li><a href="{% url 'home' %}"> <br> <br>Все категории</a></li>-->
+{% for c in cats %}
+{% if c.women__count > 0 %}
+		{% if c.pk == cat_selected %}
+			<li class="selected">{{c.name}}</li>
+		{% else %}
+			<li><a href="{{ c.get_absolute_url}}">{{c.name}}</a></li>
+		{% endif %}
+{% endif %}
+{% endfor %}
+
+		<li class="share">
+		<a href="https://www.youtube.com/channel/UClJzWfGWuGJL2t-3dYKcHTA/playlists" target="_blank">Наш канал</a>
+		<a class="share-yt" href="https://www.youtube.com/channel/UClJzWfGWuGJL2t-3dYKcHTA/playlists" target="_blank" rel="nofollow"></a>
+
+		</li>
+	</ul>
+</td>
+
+<!-- Конец Sidebar'а -->
+<td valign="top" class="content">
+	<!-- Хлебные крошки -->
+	{% block breadcrumbs %}
+	{% endblock %}
+
+<!-- Блок контента -->
+	<div class="content-text">
+{% block content %}
+{% endblock %}
+{% if page_obj.has_other_pages %}   <!-- Don't show pages if it is no other pages -->
+<nav class="list-pages">
+	<ul>
+{% if page_obj.has_previous %}   <!-- Button to the previous page -->
+<li class="page-num">
+	<a href="?page={{ page_obj.previous_page_number }}">&lt</a>
+</li>
+{% endif %}
+
+		{% for p in paginator.page_range %}   <!-- 3 strings for don't select current page -->
+		{% if page_obj.number == p %}
+		<li class="page-num page-num-selected">{{ p }}</li>
+		{% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}  <!-- For showing several previous and next links to pages -->
+		<li class="page-num">
+			<a href="?page={{ p }}">{{ p }}</a>
+		</li>
+		{% endif %}
+		{% endfor %}
+
+{% if page_obj.has_next %}   <!-- Button to the next page -->
+<li class="page-num">
+	<a href="?page={{ page_obj.next_page_number }}">&gt</a>
+</li>
+{% endif %}
+
+
+	</ul>
+{% endif %}
+</nav>
+
+	</div>
+<!-- Конец блока контента -->
+
+</td></tr></table>
+</td></tr>
+<!-- Footer -->
+<tr><td valign=top>
+	<div id="footer" align="center">
+		<p><div id="current_date_time_block2"></div>
+&copy; <script language="javascript" type="text/javascript"><!--
+var d = new Date();
+
+var day=new Array("Воскресенье","Понедельник","Вторник",
+"Среда","Четверг","Пятница","Суббота");
+
+var month=new Array("января","февраля","марта","апреля","мая","июня",
+"июля","августа","сентября","октября","ноября","декабря");
+
+document.write(d.getFullYear() + " г.");
+//--></script>
+		Частичное или полное копирование информации с данного сайта для распространения на других ресурсах, в том числе и бумажных, строго запрещено.</p>
+	</div>
+</td></tr></table>
+<!-- Конец footer'а и страницы -->
+</body>
+</html>

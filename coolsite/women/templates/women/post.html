@@ -1,0 +1,18 @@
+{% extends 'women/base.html' %}
+
+{% block content %}
+<ul class="list-articles">
+
+			<li><div class="article-panel">
+	<p class="first">Категория: {{post.cat}}</p>
+	<p class="last">Дата: {{post.time_update|date:"d-m-Y"}}</p>
+</div>
+<h1>{{post.title}}</h1>
+
+{% if post.photo %}
+<p><img class="img-article-left" src="{{post.photo.url}}"></p>
+{% endif %}
+
+{{post.content|linebreaks}}
+<!-- linebreaks добавляет теги абзацев -->
+{% endblock %}
